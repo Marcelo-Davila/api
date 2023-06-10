@@ -3,6 +3,8 @@ using api.Models;
 using api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
 
 namespace api.Controllers
 {
@@ -44,26 +46,28 @@ namespace api.Controllers
         [HttpPost("clientes_enderecos")]
         public async Task<IActionResult> PostAsync(
            [FromServices] AppDbContext context,
-           [FromBody] CreateClienteViewModel model)
+           [FromBody] CreateCliente_EnderecoViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var cliente = new Cliente
+            var cliente_endereco = new Cliente_Endereco
             {
-                Nome = model.Nome,
-                Email = model.Email,
-                Senha = model.Senha,
-                Senha_Criptografada = model.Senha.ConvertToMD5(),
-                Data_Cadastro = DateTime.Now,
-                Ativo = true
+                Bairro = model.Bairro,
+                CEP = model.CEP,
+                Cidade = model.Cidade,
+                Complemento = model.Complemento,
+                Rua = model.Rua,
+                Rua_Nro = model.Rua_Nro,
+                Cliente_Id = model.Cliente_Id,
+                Endereco_Tipo_Id = model.Endereco_Tipo_Id
             };
 
             try
             {
-                await context.Clientes.AddAsync(cliente);
+                await context.Clientes_Enderecos.AddAsync(cliente_endereco);
                 await context.SaveChangesAsync();
-                return Created(uri: $"clientes/{cliente.Id}", cliente);
+                return Created(uri: $"clientes_enderecos/{cliente_endereco.Id}", cliente_endereco);
             }
             catch (Exception)
             {
@@ -71,33 +75,37 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("clientes/{id}")]
+        [HttpPut("clientes_enderecos/{id}")]
         public async Task<IActionResult> PutAsync(
            [FromServices] AppDbContext context,
-           [FromBody] CreateClienteViewModel model,
+           [FromBody] CreateCliente_EnderecoViewModel model,
            [FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var cliente = await context
-                .Clientes
+            var cliente_endereco = await context
+                .Clientes_Enderecos
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (cliente == null)
+            if (cliente_endereco == null)
                 return NotFound();
 
             try
             {
-                cliente.Nome = model.Nome;
-                cliente.Email = model.Email;
-                cliente.Senha = model.Senha;
-                cliente.Senha_Criptografada = model.Senha.ConvertToMD5();
+                cliente_endereco.Bairro = model.Bairro;
+                cliente_endereco.CEP = model.CEP;
+                cliente_endereco.Cidade = model.Cidade;
+                cliente_endereco.Complemento = model.Complemento;
+                cliente_endereco.Rua = model.Rua;
+                cliente_endereco.Rua_Nro = model.Rua_Nro;
+                cliente_endereco.Cliente_Id = model.Cliente_Id ;
+                cliente_endereco.Endereco_Tipo_Id = model.Endereco_Tipo_Id;
 
-                context.Clientes.Update(cliente);
+                context.Clientes_Enderecos.Update(cliente_endereco);
                 await context.SaveChangesAsync();
 
-                return Ok(cliente);
+                return Ok(cliente_endereco);
             }
             catch (Exception)
             {
@@ -105,21 +113,21 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("clientes/{id}")]
+        [HttpDelete("clientes_enderecos/{id}")]
         public async Task<IActionResult> PutAsync(
            [FromServices] AppDbContext context,
            [FromRoute] int id)
         {
-            var cliente = await context
-                .Clientes
+            var cliente_endereco = await context
+                .Clientes_Enderecos
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (cliente == null)
+            if (cliente_endereco == null)
                 return NotFound();
 
             try
             {
-                context.Clientes.Remove(cliente);
+                context.Clientes_Enderecos.Remove(cliente_endereco);
                 await context.SaveChangesAsync();
 
                 return Ok();
