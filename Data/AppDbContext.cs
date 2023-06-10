@@ -8,6 +8,9 @@ namespace Api.Data
     {
         public DbSet<Cliente> Clientes { get; set; }
 
+        public DbSet<Cliente_Endereco> Clientes_Enderecos { get; set; }
+
+        public DbSet<Endereco_Tipo> Endereco_Tipos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

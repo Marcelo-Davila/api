@@ -25,6 +25,9 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("Data_Cadastro")
                         .HasColumnType("datetime(6)");
 
@@ -50,6 +53,90 @@ namespace api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("api.Models.Cliente_Endereco", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Bairro")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("CEP")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("varchar(8)");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Cliente_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Complemento")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Endereco_Tipo_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Rua")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Rua_Nro")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Cliente_Id");
+
+                    b.HasIndex("Endereco_Tipo_Id");
+
+                    b.ToTable("Clientes_Enderecos");
+                });
+
+            modelBuilder.Entity("api.Models.Endereco_Tipo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Endereco_Tipos");
+                });
+
+            modelBuilder.Entity("api.Models.Cliente_Endereco", b =>
+                {
+                    b.HasOne("api.Models.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("Cliente_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.Models.Endereco_Tipo", "Endereco_Tipo")
+                        .WithMany()
+                        .HasForeignKey("Endereco_Tipo_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Endereco_Tipo");
                 });
 #pragma warning restore 612, 618
         }

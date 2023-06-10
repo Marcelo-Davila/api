@@ -8,10 +8,10 @@ namespace api.Models
 
         [MaxLength(70)]
         public string? Nome { get; set; }
-        
+
         [MaxLength(100)]
         public string Email { get; set; }
-        
+
         [MaxLength(255)]
         public string Senha { get; set; }
 
@@ -19,5 +19,7 @@ namespace api.Models
         public string Senha_Criptografada { get; set; }
 
         public DateTime Data_Cadastro { get; set; } = DateTime.Now;
+
+        public bool Ativo { get; set; }
     }
 }

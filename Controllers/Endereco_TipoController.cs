@@ -1,70 +1,64 @@
-﻿using api.Models;
+﻿using Api.Data;
+using api.Models;
 using api.ViewModels;
-using Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using XGame.Domain.Extensions;
 
 namespace api.Controllers
 {
     [ApiController]
     [Route("/v1")]
-    public class ClienteController : ControllerBase
+    public class Endereco_TipoController : ControllerBase
     {
         [HttpGet]
-        [Route(template: "clientes")]
+        [Route(template: "enderecos_tipos")]
         public async Task<IActionResult> GetAsync(
             [FromServices] AppDbContext context)
         {
 
-            var clientes = await context
-                .Clientes
+            var endereco_tipos = await context
+                .Endereco_Tipos
                 .AsNoTracking()
                 .ToListAsync();
 
-            return Ok(clientes);
+            return Ok(endereco_tipos);
         }
 
         [HttpGet]
-        [Route("clientes/{id}")]
+        [Route("enderecos_tipos/{id}")]
         public async Task<IActionResult> GetByIdAsync(
             [FromServices] AppDbContext context,
             [FromRoute] int id)
         {
 
-            var cliente = await context
-                .Clientes
+            var endereco_tipo = await context
+                .Endereco_Tipos
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id); 
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            return cliente == null 
-                ? NotFound() 
-                : Ok(cliente);
+            return endereco_tipo == null
+                ? NotFound()
+                : Ok(endereco_tipo);
         }
 
-        [HttpPost("clientes")]
+        [HttpPost("enderecos_tipos")]
         public async Task<IActionResult> PostAsync(
            [FromServices] AppDbContext context,
-           [FromBody] CreateClienteViewModel model)
+           [FromBody] CreateEndereco_TipoViewModel model)
         {
             if (!ModelState.IsValid)
-              return BadRequest();
+                return BadRequest();
 
-            var cliente = new Cliente
+            var endereco_tipo = new Endereco_Tipo
             {
-                Nome = model.Nome,
-                Email = model.Email,
-                Senha = model.Senha,
-                Senha_Criptografada = model.Senha.ConvertToMD5(),
-                Data_Cadastro = DateTime.Now,
-                Ativo = true
+                Descricao = model.Descricao
             };
 
             try
             {
-                await context.Clientes.AddAsync(cliente);
+                await context.Endereco_Tipos.AddAsync(endereco_tipo);
                 await context.SaveChangesAsync();
-                return Created(uri: $"clientes/{cliente.Id}", cliente);
+                return Created(uri: $"enderecos_tipos/{endereco_tipo.Id}", endereco_tipo);
             }
             catch (Exception)
             {
@@ -72,33 +66,30 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("clientes/{id}")]
+        [HttpPut("enderecos_tipos/{id}")]
         public async Task<IActionResult> PutAsync(
            [FromServices] AppDbContext context,
-           [FromBody] CreateClienteViewModel model,
+           [FromBody] CreateEndereco_TipoViewModel model,
            [FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var cliente = await context
-                .Clientes
+            var endereco_tipo = await context
+                .Endereco_Tipos
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (cliente == null)
+            if (endereco_tipo == null)
                 return NotFound();
 
             try
             {
-                cliente.Nome = model.Nome;
-                cliente.Email = model.Email;
-                cliente.Senha = model.Senha;
-                cliente.Senha_Criptografada = model.Senha.ConvertToMD5();
+                endereco_tipo.Descricao = model.Descricao;
 
-                context.Clientes.Update(cliente);
+                context.Endereco_Tipos.Update(endereco_tipo);
                 await context.SaveChangesAsync();
-                
-                return Ok(cliente);
+
+                return Ok(endereco_tipo);
             }
             catch (Exception)
             {
@@ -106,21 +97,21 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("clientes/{id}")]
+        [HttpDelete("enderecos_tipos/{id}")]
         public async Task<IActionResult> PutAsync(
            [FromServices] AppDbContext context,
            [FromRoute] int id)
         {
-            var cliente = await context
-                .Clientes
+            var endereco_tipo = await context
+                .Endereco_Tipos
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (cliente == null)
+            if (endereco_tipo == null)
                 return NotFound();
 
             try
             {
-                context.Clientes.Remove(cliente);
+                context.Endereco_Tipos.Remove(endereco_tipo);
                 await context.SaveChangesAsync();
 
                 return Ok();
