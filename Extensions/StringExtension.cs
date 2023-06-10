@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace XGame.Domain.Extensions
+namespace api.Extensions
 {
     public static class StringExtension
     {

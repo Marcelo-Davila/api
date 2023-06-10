@@ -1,55 +1,53 @@
-﻿using api.Extensions;
+﻿using Api.Data;
 using api.Models;
 using api.ViewModels;
-using Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace api.Controllers
 {
     [ApiController]
     [Route("/v1")]
-    public class ClienteController : ControllerBase
+    public class Cliente_EnderecoController : ControllerBase
     {
         [HttpGet]
-        [Route(template: "clientes")]
+        [Route(template: "clientes_enderecos")]
         public async Task<IActionResult> GetAsync(
             [FromServices] AppDbContext context)
         {
 
-            var clientes = await context
-                .Clientes
+            var clientes_enderecos = await context
+                .Clientes_Enderecos
                 .AsNoTracking()
                 .ToListAsync();
 
-            return Ok(clientes);
+            return Ok(clientes_enderecos);
         }
 
         [HttpGet]
-        [Route("clientes/{id}")]
+        [Route("clientes_enderecos/{id}")]
         public async Task<IActionResult> GetByIdAsync(
             [FromServices] AppDbContext context,
             [FromRoute] int id)
         {
 
-            var cliente = await context
-                .Clientes
+            var cliente_endereco = await context
+                .Clientes_Enderecos
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == id); 
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            return cliente == null 
-                ? NotFound() 
-                : Ok(cliente);
+            return cliente_endereco == null
+                ? NotFound()
+                : Ok(cliente_endereco);
         }
 
-        [HttpPost("clientes")]
+        [HttpPost("clientes_enderecos")]
         public async Task<IActionResult> PostAsync(
            [FromServices] AppDbContext context,
            [FromBody] CreateClienteViewModel model)
         {
             if (!ModelState.IsValid)
-              return BadRequest();
+                return BadRequest();
 
             var cliente = new Cliente
             {
@@ -98,7 +96,7 @@ namespace api.Controllers
 
                 context.Clientes.Update(cliente);
                 await context.SaveChangesAsync();
-                
+
                 return Ok(cliente);
             }
             catch (Exception)
@@ -132,5 +130,6 @@ namespace api.Controllers
             }
 
         }
+
     }
 }
